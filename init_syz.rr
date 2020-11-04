@@ -1,0 +1,7 @@
+load("buch3.rr");
+load("div3.rr");
+load("division2.rr");
+load("buchberger2.rr");
+load("syzygy.rr");
+
+end$
