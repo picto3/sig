@@ -1,7 +1,7 @@
 /* FGLM(grlexとかのGroebnerをlexのgroebnerに変換) */
 
 extern MyVar;
-MyVar = [x,y,z];
+//MyVar = [x,y,z,a,b,c];
 
 def new_in(F, ORD) {
     dp_ord(ORD);

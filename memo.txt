@@ -1,6 +1,12 @@
 syzygyも多変数に -> signatureも多変数
 toricとか具体例で計算
 
+0. 先生と比較してプログラムが正しいか確認
+1. toric -> toricのS-pair -> syzygy -> syzygyのグレブナー 
+    -> S-Pairの最小表現ベクトル(signature)
+2. toric -> toricのS-pair -> GMでペア判定
+3. 1と2を比較
+
 A = [1,1,1,0,0,0],
     [0,0,0,1,1,1],
     [1,0,0,1,0,0],

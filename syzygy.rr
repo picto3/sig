@@ -1,7 +1,9 @@
+extern MyVar;
+
 def make_D(F, G) {
     D = [];
     for(I = length(F)-1; I >= 0; I--) {
-        DD = reduction2(F[I],G);
+        DD = reduction2(F[I],G, ORD);
         D = cons(DD[0], D);
     }
     
@@ -27,7 +29,7 @@ def make_Im(N) {
 }
 
 
-def syz_G(G) {
+def syz_G(G, ORD) {
     N = length(G);
     Pairs = [];
     
@@ -42,10 +44,10 @@ def syz_G(G) {
         P = car(Pairs);
         Pairs = cdr(Pairs);
         
-        Sp = spolynomial(G[P[0]],G[P[1]]);
+        Sp = spolynomial(G[P[0]],G[P[1]], ORD);
         SS = [];
 
-        QQ = reduction2(Sp[0], G);
+        QQ = reduction2(Sp[0], G, ORD);
         for(I = 0; I < N; I++) {
             if(I == P[0]) {
                 SS = append(SS, [Sp[1][0] - QQ[0][P[0]]]);
@@ -63,15 +65,16 @@ def syz_G(G) {
     return S;
 }
 
-def syz_F(F) {
-    G = buchberger(F);
-    RG = reduce(G[0], G[1]);
+def syz_F(F, ORD) {
+    G = buchberger(F, ORD);
+    RG = reduce(G[0], G[1], ORD);
+    print(RG);
 
     C = RG[1];
     D = make_D(F, RG[0]);
     Im = make_Im(length(F));
     
-    S = syz_G(RG[0]);
+    S = syz_G(RG[0], ORD);
 
     T = matrix_list_to_matrix(D) * matrix_list_to_matrix(C);
     R = matrix_list_to_matrix(Im) - T;
@@ -81,6 +84,10 @@ def syz_F(F) {
         SCR = append(SCR, [matrix_matrix_to_list(matrix_list_to_matrix(S[I]) * matrix_list_to_matrix(C))]);
     }
     SCR = append(SCR, matrix_matrix_to_list(R));
+
+    ZeroVect = matrix_matrix_to_list( newvect(length(F)) );
+
+    SCR = base_prune(ZeroVect,SCR);
 
     return SCR;
 }

@@ -1,3 +1,5 @@
+extern MyVar;
+
 def spolynomial3(F,G,ORD) {
     DF = multi_degree3(F,ORD);
     DG = multi_degree3(G,ORD);
@@ -25,7 +27,7 @@ def spolynomial3(F,G,ORD) {
         Spoly1 *= MyVar[I]^(M_Var[I]-DF[I][0]);
         Spoly2 *= MyVar[I]^(M_Var[I]-DG[I][0]);
     }
-    Spoly = Spoly1*F_VEC/DF[3][0] - Spoly2*G_VEC/DG[3][0];
+    Spoly = Spoly1*F_VEC/DF[Len_M][0] - Spoly2*G_VEC/DG[Len_M][0];
     S = [];
     for(I = 0; I < length(Spoly); I++) {
         S = append(S, [Spoly[I]]);
@@ -69,9 +71,9 @@ def buchberger3(F,ORD) {
         }
     }
 
-    MG = minimal3(G, ORD);
+    //MG = minimal3(G, ORD);
     
-    return MG;
+    return G;
 }
 
 def minimal3(G,ORD) {

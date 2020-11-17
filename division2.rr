@@ -1,3 +1,18 @@
+extern MyVar;
+//MyVar = [x,y,z,a,b,c];
+
+def in(F, ORD) {
+    dp_ord(ORD);
+    G = dp_ptod(F, MyVar);
+    T = dp_ht(G);
+    HT = dp_dtop(T, MyVar);
+    HC = dp_hc(G);
+    //HM = dp_hm(T);
+    HM = dp_dtop(dp_hm(T), MyVar);
+    
+    return [HC*HM, HC, dp_dtop(T, MyVar)];
+}
+/*
 def in(F) {
     D = deg(F,z);
     F = coef(F,D,z);
@@ -23,39 +38,71 @@ def in2(F) {
     T = T*z^D;
     return [F*T,F,T];
 }
+*/
 
-def multi_degree(F) {
-    F = in2(F);
+def multi_degree(F, ORD) {
+    F = in(F, ORD);
+    T = F[2]; // head monomial
+    //TV = dp_etov(T[0]); // vector
+
+    R = [];
+    for(I = 0; I < length(MyVar); I++) {
+        R = append(R, [ deg(T, MyVar[I]) ]);
+    }
+    
+    // add coef
+    R = append(R, [F[1]]);
+
+    return(R);
+}
+/*
+def multi_degree(F, ORD) {
+    F = in(F, ORD);
     T = F[2];
 
     return([deg(T,x), deg(T,y), deg(T,z), F[1]]);
 }
+*/
 
-def is_reducible(F,G) {
-    DF = multi_degree(F);
-    DG = multi_degree(G);
+def is_reducible(F,G, ORD) {
+    DF = multi_degree(F, ORD);
+    DG = multi_degree(G, ORD);
 
+    Res = red( DF[length(MyVar)] / DG[length(MyVar)] );
+    for(I = 0; I < length(MyVar); I++) {
+      if(DF[I] >= DG[I]) {
+        Res = Res * MyVar[I]^(DF[I] - DG[I]);
+      }
+      else {
+        return 0;
+      }
+    }
+
+    return Res;
+
+/*
     if(DF[0] >= DG[0] && DF[1] >= DG[1] && DF[2] >= DG[2]) {
         return red(DF[3]/DG[3])*x^(DF[0]-DG[0])*y^(DF[1]-DG[1])*z^(DF[2]-DG[2]);
     }
     else {
         return 0;
     }
+*/
 }
 
-def division(F,G) {
+def division(F,G, ORD) {
     Q = 0; R = F;
-    D = is_reducible(R, G);
+    D = is_reducible(R, G, ORD);
     while(type(D) != 0) {
         Q = Q+D;
         R = R-D*G;
-        D = is_reducible(R,G);
+        D = is_reducible(R,G, ORD);
     }
 
     return [Q,R];
 }
 
-def reduction2(F,G) {
+def reduction2(F,G, ORD) {
     Rem = 0;
     
     N = length(G);
@@ -64,7 +111,7 @@ def reduction2(F,G) {
     while(F) {
         for(U = 0, L = G, I = 0; L != []; L = cdr(L)) {
             Red = car(L);
-            Mono = is_reducible(F, Red);
+            Mono = is_reducible(F, Red, ORD);
             //print(Mono);
 
             if(Mono != 0) {
@@ -83,7 +130,7 @@ def reduction2(F,G) {
             F = U;
         }
         else {
-            H = in2(F);
+            H = in(F, ORD);
             Rem += H[0];
             F -= H[0];
         }

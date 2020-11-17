@@ -3,5 +3,21 @@ load("div3.rr");
 load("division2.rr");
 load("buchberger2.rr");
 load("syzygy.rr");
+load("toric_ex.rr");
+
+extern MyVar;
+//MyVar = [x_0, x_1, x_2, x_3, x_4, x_5];
+MyVar = [x, y];
+
+A = [[1,1,1,0,0,0],
+    [0,0,0,1,1,1],
+    [1,0,0,1,0,0],
+    [0,1,0,0,1,0],
+    [0,0,1,0,0,1]];
+
+IA = calc_toric(A);
+print(IA);
+
+F = [x^2+y^2-4, x*y-1];
 
 end$

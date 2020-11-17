@@ -1,16 +1,29 @@
-def spolynomial(F,G) {
-    DF = multi_degree(F);
-    DG = multi_degree(G);
-    Mx = DF[0]>DG[0]?DF[0]:DG[0];
-    My = DF[1]>DG[1]?DF[1]:DG[1];
-    Mz = DF[2]>DG[2]?DF[2]:DG[2];
-    
-    CC = [x^(Mx-DF[0])*y^(My-DF[1])*z^(Mz-DF[2])/DF[3], -x^(Mx-DG[0])*y^(My-DG[1])*z^(Mz-DG[2])/DG[3]];
+extern MyVar;
 
-    return [x^(Mx-DF[0])*y^(My-DF[1])*z^(Mz-DF[2])*F/DF[3]-x^(Mx-DG[0])*y^(My-DG[1])*z^(Mz-DG[2])*G/DG[3], CC];
+def spolynomial(F,G, ORD) {
+    DF = multi_degree(F, ORD);
+    DG = multi_degree(G, ORD);
+    
+    C1 = 1 / DF[length(MyVar)];
+    C2 = -1 / DG[length(MyVar)];
+    for(I = 0; I < length(MyVar); I++) {
+      M = DF[I]>DG[I]?DF[I]:DG[I];
+      C1 = C1 * MyVar[I]^(M - DF[I]);
+      C2 = C2 * MyVar[I]^(M - DG[I]);
+    }
+    //Mx = DF[0]>DG[0]?DF[0]:DG[0];
+    //My = DF[1]>DG[1]?DF[1]:DG[1];
+    //Mz = DF[2]>DG[2]?DF[2]:DG[2];
+    
+
+    //CC = [x^(Mx-DF[0])*y^(My-DF[1])*z^(Mz-DF[2])/DF[3], -x^(Mx-DG[0])*y^(My-DG[1])*z^(Mz-DG[2])/DG[3]];
+    CC = [C1, C2];
+
+    //return [x^(Mx-DF[0])*y^(My-DF[1])*z^(Mz-DF[2])*F/DF[3]-x^(Mx-DG[0])*y^(My-DG[1])*z^(Mz-DG[2])*G/DG[3], CC];
+    return [C1*F + C2*G , CC];
 }
 
-def buchberger(F) {
+def buchberger(F, ORD) {
     N = length(F);
     Pairs = [];
     
@@ -26,8 +39,8 @@ def buchberger(F) {
     while ( Pairs != [] ) {
         P = car(Pairs);
         Pairs = cdr(Pairs);
-        Sp = spolynomial(G[P[0]],G[P[1]]);
-        Rem = reduction2(Sp[0],G);
+        Sp = spolynomial(G[P[0]],G[P[1]], ORD);
+        Rem = reduction2(Sp[0],G, ORD);
         if ( Rem[1] ) {
             // 行列の初期化
             CCC = [];
@@ -85,11 +98,15 @@ def buchberger(F) {
     }
     
     C = matrix_matrix_to_list(NEWC);
+
+    if(C == []) {
+      C = matrix_matrix_to_list( matrix_identity_matrix(N) );
+    }
     // C = vtol(NEWC);
     return [G, C];
 }
 
-def minimal(G, C) {
+def minimal(G, C, ORD) {
     N = length(G);
     
     MG = [];
@@ -98,13 +115,13 @@ def minimal(G, C) {
         GG = [];
         for(J = 0; J < N; J++) {
             if(I != J) {
-                PP = in2(G[J]);
+                PP = in(G[J], ORD);
                 GG = append(GG, [PP[0]]);
             }
         }
 
-        PP = in2(G[I]);
-        RR = reduction2(PP[0],GG);
+        PP = in(G[I], ORD);
+        RR = reduction2(PP[0],GG, ORD);
         if(RR[1] != 0) {
             MG = append(MG, [G[I]]);
             CC = append(CC, [C[I]]);
@@ -115,15 +132,15 @@ def minimal(G, C) {
     //return [MG, CC];
 }
 
-def reduce(G, C) {
-    MG = minimal(G, C);
+def reduce(G, C, ORD) {
+    MG = minimal(G, C, ORD);
     N = length(MG[0]);
 
     MG2 = [];
     CC = [];
     for(I = 0; I < N; I++) {
         CCC = newvect(N);
-        PPP = in2(MG[0][I]);
+        PPP = in(MG[0][I], ORD);
         MG2 = append(MG2, [MG[0][I]/PPP[1]]);
         for(J = 0; J < N; J++) {
             if(I == J) {
@@ -148,7 +165,7 @@ def reduce(G, C) {
         NEWP = 0;
 
         while(PPP != 0) {
-            INP = in2(PPP);
+            INP = in(PPP, ORD);
             for(J = 0; J < N; J++) {
                 if(I == J) {
                     J = J + 1;
@@ -157,8 +174,8 @@ def reduce(G, C) {
                     break;
                 }
 
-                INQ = in2(MG2[J]);
-                JUDGE = is_reducible(INP[0],INQ[0]);
+                INQ = in(MG2[J], ORD);
+                JUDGE = is_reducible(INP[0],INQ[0],ORD);
                 if(JUDGE != 0) {
                     PPP = PPP - JUDGE*MG2[J];
                     for(K = 0; K < N; K++) {
