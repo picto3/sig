@@ -1,6 +1,6 @@
 extern MyVar;
 
-def make_D(F, G) {
+def make_D(F, G, ORD) {
     D = [];
     for(I = length(F)-1; I >= 0; I--) {
         DD = reduction2(F[I],G, ORD);
@@ -71,7 +71,7 @@ def syz_F(F, ORD) {
     print(RG);
 
     C = RG[1];
-    D = make_D(F, RG[0]);
+    D = make_D(F, RG[0], ORD);
     Im = make_Im(length(F));
     
     S = syz_G(RG[0], ORD);

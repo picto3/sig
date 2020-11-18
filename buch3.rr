@@ -71,9 +71,9 @@ def buchberger3(F,ORD) {
         }
     }
 
-    //MG = minimal3(G, ORD);
+    MG = minimal3(G, ORD);
     
-    return G;
+    return MG;
 }
 
 def minimal3(G,ORD) {
