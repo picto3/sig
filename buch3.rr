@@ -73,8 +73,25 @@ def buchberger3(F,ORD) {
 
     MG = minimal3(G, ORD);
     
+    //return G;
     return MG;
 }
+
+
+/*
+
+listH(SmallG,G);
+
+H=listH(SmallG,G); G=base_set_minus(G,H);
+
+listH2(SmallG,G)
+
+H2 = ... ; 
+
+if (length(H2)==0) MG=cons(SMallG,MG);
+
+
+*/
 
 def minimal3(G,ORD) {
     N = length(G);
@@ -82,26 +99,60 @@ def minimal3(G,ORD) {
     Zero_vect = matrix_matrix_to_list(Zero_vec);
 
     MG = [];
-    //CC = [];
-    for(I = 0; I < N; I++) {
-        GG = G;
-        for(J = 0; J < N; J++) {
-            FLAG = 1;
-            if(I != J) {
-                Mono = is_reducible3(G[I], G[J], ORD);
-                if(Mono != [0]) {
-                    FLAG = 0;
-                    break;
-                }
-            }
-        }
+    GG = G;
+    while(GG != []) {
+      SmallG = car(GG);
+      H = listH(SmallG, GG, ORD);
+      GG = base_set_minus(GG, H);
+      print("\nMg Mg Mg Mg");
+      print(MG);
+      print("SmallG");
+      print(SmallG);
+      print("HHHHHHHHHHHHHHHHHHHHH");
+      print(H);
+      print("GGGGGGGGGGGGGGGGGGGGGGG");
+      print(GG);
+      
+      H2 = listH2(SmallG, GG, ORD);
 
-        if(FLAG == 1) {
-            MG = append(MG, [G[I]]);
-        }
+      if(length(H2) == 0) {
+        MG = cons(SmallG, MG);
+      }
     }
 
+
+    print("minimal minimal minimal");
+    print(G);
+    print(MG);
+
     return MG;
+}
+
+def listH(SmallG, G, ORD) {
+  H = [];
+
+  for(I = 0; I < length(G); I++) {
+    SmallH = G[I];
+    if(is_reducible3(SmallH, SmallG, ORD) != [0]) {
+      H = append(H, [SmallH]);
+    }
+  }
+
+  return H;
+}
+
+def listH2(SmallG, G, ORD) {
+  H2 = [];
+
+  for(I = 0; I < length(G); I++) {
+    SmallH = G[I];
+    if(is_reducible3(SmallG, SmallH, ORD) != [0]) {
+      H2 = append(H2, [SmallH]);
+    }
+  }
+  
+  return H2;
+
 }
 
 /*
