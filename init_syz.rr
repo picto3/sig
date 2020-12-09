@@ -1,3 +1,10 @@
+// fとgのspolyの表現ベクトルを求める関数
+// イデアルの元の表現ベクトルを求める
+// ↑グレブナーで割り算した商
+
+// g in <G> -> Gで割り算すればOK
+// ↑にsploy入れて表現ベクトルを持ってくる
+
 load("buch3.rr");
 load("div3.rr");
 load("division2.rr");
@@ -6,18 +13,28 @@ load("syzygy.rr");
 load("toric_ex.rr");
 load("mysyz.rr");
 load("my_check_syz.rr");
+load("mySignature.rr");
 
 load("noro_module_syz.rr");
 //import("noro_module_syz.rr");
+
+extern DebugPrint;
+DebugPrint = 0;
 
 extern MyVar;
 MyVar = [x_0, x_1, x_2, x_3, x_4, x_5, x_6, x_7];
 //MyVar = [x, y];
 
-//IF = [[x^2+y^2-4],[x*y - 1]];
+//IF = [x^2+y^2-4,x*y - 1];
+//G = mysyz(IF,2);
+//P = [x^2*y+x, x+y];
+//Sig = calcSig(P,IF,2);
+//print(Sig);
 
 //GB = buchberger3(IF, 2);
 
+
+print("\nmatrix matrix matrix");
 A = [[1,1,1,0,0,0],
     [0,0,0,1,1,1],
     [1,0,0,1,0,0],
@@ -56,16 +73,22 @@ F = [[4,0,0,2,1,1],
 
 G1 = [[1,1,1,1,1], [0,1,0,1,2],[0,0,1,1,0]];
 
-print("AAAAAAAAAAAAAAAAAAAA");
-IF = calc_toric(E);
-G_SYZA = mysyz(IF, 2);
-SYZF = newsyz.module_syz(IF, MyVar, 0, 2);
-print(SYZF[1]);
-print(G_SYZA);
-print(check_syz(SYZF[0], G_SYZA));
 
-print("buch_check");
-Check = spair_check(G_SYZA, 2);
+print("AAAAAAAAAAAAAAAAAAAA");
+IF = calc_toric(A);
+G_SYZA = mysyz(IF, 2);
+Sig = calcSig(P, IF, 2);
+print("signature");
+print(Sig);
+
+//SYZF = newsyz.module_syz(IF, MyVar, 0, 2);
+//print(SYZF[1]);
+//print(G_SYZA);
+//print(check_syz(SYZF[0], G_SYZA));
+
+//print("buch_check");
+//Check = spair_check(G_SYZA, 2);
+
 
 /*
 print("CCCCCCCCCCCCCCCCCCCCC");

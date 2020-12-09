@@ -1,3 +1,5 @@
+extern MyVar;
+
 def mysyz(A, ORD) {
   SYZA = syz_F(A, ORD);
   G_SYZA = buchberger3(SYZA, ORD);
@@ -13,3 +15,5 @@ def my_tsyz(A, ORD) {
   
   return G_SYZA;
 }
+
+end$

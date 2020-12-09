@@ -1,0 +1,14 @@
+extern MyVar;
+
+def calcSig(P, F, ORD) {
+  G = mysyz(F, ORD);
+  Sig = reduction3(P, G, ORD);
+
+  return Sig;
+}
+
+def calcRepVec(SmallG, G, ORD) {
+  
+}
+
+end$

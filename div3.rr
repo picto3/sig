@@ -113,6 +113,7 @@ def scala_mul(Mono, Vec) {
 def reduction3(F,G,ORD) {
     Rem = newvect(length(F));
     N = length(G);
+    Quot = newvect(length(G));
     
     T = matrix_list_to_matrix(F);
     Zero_vect = newvect(length(F));
@@ -125,6 +126,7 @@ def reduction3(F,G,ORD) {
 
             if(Mono != [0]) {
                 RR = matrix_list_to_matrix(Red);
+                Quot[I] = Quot[I] + Mono[0];
                 
                 for(JJ = 0; JJ < length(Red); JJ++) {
                     RR[JJ] = RR[JJ]*Mono[0];
@@ -173,6 +175,9 @@ def reduction3(F,G,ORD) {
             }
         }
     }
+    
+    VQuot = matrix_matrix_to_list(Quot);
+
     return matrix_matrix_to_list(Rem);
 }
 

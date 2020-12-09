@@ -1,4 +1,5 @@
 extern MyVar;
+extern DebugPrint;
 
 def spolynomial3(F,G,ORD) {
     DF = multi_degree3(F,ORD);
@@ -63,7 +64,11 @@ def buchberger3(F,ORD) {
         if ( Rem != Zero_vect ) {
             // Gの更新
             G = append(G,[Rem]);
-            print(G);
+
+            if(DebugPrint == 1) {
+              print(G);
+            }
+
             for ( I = 0; I < N; I++ ) {
                 Pairs = cons([I,N],Pairs);
             }
@@ -104,15 +109,17 @@ def minimal3(G,ORD) {
       SmallG = car(GG);
       H = listH(SmallG, GG, ORD);
       GG = base_set_minus(GG, H);
-      print("\nMg Mg Mg Mg");
-      print(MG);
-      print("SmallG");
-      print(SmallG);
-      print("HHHHHHHHHHHHHHHHHHHHH");
-      print(H);
-      print("GGGGGGGGGGGGGGGGGGGGGGG");
-      print(GG);
-      
+      if(DebugPrint == 1) {
+        print("\nMg Mg Mg Mg");
+        print(MG);
+        print("SmallG");
+        print(SmallG);
+        print("HHHHHHHHHHHHHHHHHHHHH");
+        print(H);
+        print("GGGGGGGGGGGGGGGGGGGGGGG");
+        print(GG);
+      }
+
       H2 = listH2(SmallG, GG, ORD);
 
       if(length(H2) == 0) {
@@ -121,9 +128,11 @@ def minimal3(G,ORD) {
     }
 
 
-    print("minimal minimal minimal");
-    print(G);
-    print(MG);
+    if(DebugPrint == 1) {
+      print("minimal minimal minimal");
+      print(G);
+      print(MG);
+    }
 
     return MG;
 }
@@ -150,96 +159,96 @@ def listH2(SmallG, G, ORD) {
       H2 = append(H2, [SmallH]);
     }
   }
-  
+
   return H2;
 
 }
 
 /*
-def reduce(G, C) {
-    MG = minimal(G, C);
-    N = length(MG[0]);
+   def reduce(G, C) {
+   MG = minimal(G, C);
+   N = length(MG[0]);
 
-    MG2 = [];
-    CC = [];
-    for(I = 0; I < N; I++) {
-        CCC = newvect(N);
-        PPP = in2(MG[0][I]);
-        MG2 = append(MG2, [MG[0][I]/PPP[1]]);
-        for(J = 0; J < N; J++) {
-            if(I == J) {
-                CCC[I] = 1/PPP[1];
-            }
-        }
-        CC = append(CC, [matrix_matrix_to_list(CCC)]);
-    }
+   MG2 = [];
+   CC = [];
+   for(I = 0; I < N; I++) {
+   CCC = newvect(N);
+   PPP = in2(MG[0][I]);
+   MG2 = append(MG2, [MG[0][I]/PPP[1]]);
+   for(J = 0; J < N; J++) {
+   if(I == J) {
+   CCC[I] = 1/PPP[1];
+   }
+   }
+   CC = append(CC, [matrix_matrix_to_list(CCC)]);
+   }
 
-    C2 = matrix_list_to_matrix(CC);
+   C2 = matrix_list_to_matrix(CC);
 
-    RG = [];
-    CC = [];
-    for(I = 0; I < N; I++) {
-        CCC = newvect(N);
-        for(J = 0; J < N; J++) {
-            if(I == J) {
-                CCC[I] = 1;
-            }
-        }
-        PPP = MG2[I];
-        NEWP = 0;
+   RG = [];
+   CC = [];
+   for(I = 0; I < N; I++) {
+   CCC = newvect(N);
+   for(J = 0; J < N; J++) {
+   if(I == J) {
+   CCC[I] = 1;
+   }
+   }
+   PPP = MG2[I];
+   NEWP = 0;
 
-        while(PPP != 0) {
-            INP = in2(PPP);
-            for(J = 0; J < N; J++) {
-                if(I == J) {
-                    J = J + 1;
-                }
-                if(J >= N) {
-                    break;
-                }
+   while(PPP != 0) {
+   INP = in2(PPP);
+   for(J = 0; J < N; J++) {
+   if(I == J) {
+   J = J + 1;
+   }
+   if(J >= N) {
+   break;
+   }
 
-                INQ = in2(MG2[J]);
-                JUDGE = is_reducible3(INP[0],INQ[0],ORD);
-                if(JUDGE != 0) {
-                    PPP = PPP - JUDGE*MG2[J];
-                    for(K = 0; K < N; K++) {
-                        if(K == J) {
-                            CCC[J] = CCC[J] - JUDGE;
-                        }
-                        */
-                        /*
-                        else {
-                            CCC = append(CCC, [0]);
-                        }
-                        */
-                        /*
+   INQ = in2(MG2[J]);
+   JUDGE = is_reducible3(INP[0],INQ[0],ORD);
+   if(JUDGE != 0) {
+   PPP = PPP - JUDGE*MG2[J];
+   for(K = 0; K < N; K++) {
+   if(K == J) {
+   CCC[J] = CCC[J] - JUDGE;
+   }
+ */
+/*
+   else {
+   CCC = append(CCC, [0]);
+   }
+ */
+/*
 
-                    }
-                    break;
-                }
-                else {
-                    if(J >= N-1 || (J >= N-2 && I >= N-1)) {
-                        NEWP = NEWP + INP[0];
-                        PPP = PPP - INP[0];
-                        break;
-                    }
-                }
-            }
-        }
+   }
+   break;
+   }
+   else {
+   if(J >= N-1 || (J >= N-2 && I >= N-1)) {
+   NEWP = NEWP + INP[0];
+   PPP = PPP - INP[0];
+   break;
+   }
+   }
+   }
+   }
 
-        CC = append(CC, [matrix_matrix_to_list(CCC)]);
-        
-        RG = append(RG, [NEWP]);
-    }
+   CC = append(CC, [matrix_matrix_to_list(CCC)]);
 
-    C1 = matrix_list_to_matrix(CC);
-    C3 = matrix_list_to_matrix(MG[1]);
-    CC = C1 * C2;
-    CC = CC * C3;
-    CR = matrix_matrix_to_list(CC);
+   RG = append(RG, [NEWP]);
+   }
 
-    return [RG, CR];
-}
-*/
+   C1 = matrix_list_to_matrix(CC);
+   C3 = matrix_list_to_matrix(MG[1]);
+   CC = C1 * C2;
+   CC = CC * C3;
+   CR = matrix_matrix_to_list(CC);
+
+   return [RG, CR];
+   }
+ */
 
 end$
