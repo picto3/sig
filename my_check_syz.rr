@@ -90,4 +90,21 @@ def check_syz(Teacher, My) {
   return([CNT1, CNT]);
 }
 
+def repVecCheck(RepVec, G, F) {
+
+  C = 0;
+  for(I = 0; I < length(G); I++) {
+    C += RepVec[I]*G[I];
+  }
+
+  if(C == F) {
+    //print("RepVec OK");
+    return 1;
+  }
+
+  //print("RepVec No");
+  return 0;
+}
+
+
 end$

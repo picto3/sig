@@ -23,14 +23,27 @@ DebugPrint = 0;
 
 extern MyVar;
 MyVar = [x_0, x_1, x_2, x_3, x_4, x_5, x_6, x_7];
-//MyVar = [x, y];
+/*
+MyVar = [x, y];
 
-//IF = [x^2+y^2-4,x*y - 1];
-//G = mysyz(IF,2);
-//P = [x^2*y+x, x+y];
-//Sig = calcSig(P,IF,2);
-//print(Sig);
+IF = [x^2+y^2-4,x*y - 1];
+GG = buchberger(IF, 2);
+G = mysyz(GG[0],2);
+*/
+/*
+P = (x^2*y+x)*IF[0] + (x+y)*IF[1];
+RepVec = calcRepVec(P, GG, 2);
+print("Rep");
+print(RepVec);
 
+print("check");
+repVecCheck(RepVec, GG, P);
+*/
+/*
+Sigs = sploySig(GG[0], G, 2);
+print(Sigs);
+dispSigs(Sigs);
+*/
 //GB = buchberger3(IF, 2);
 
 
@@ -75,11 +88,18 @@ G1 = [[1,1,1,1,1], [0,1,0,1,2],[0,0,1,1,0]];
 
 
 print("AAAAAAAAAAAAAAAAAAAA");
-IF = calc_toric(A);
+//IF = calc_toric(A);
+
+//IF = [(x_0)^2,(x_0)*(x_1),(x_1)^2];
+
+IF = [x_0+1,x_1+2,x_2^2+1];
+
 G_SYZA = mysyz(IF, 2);
-Sig = calcSig(P, IF, 2);
-print("signature");
-print(Sig);
+//G_SYZA = [[x_1,-x_0,0],[0,x_1,-x_0],[-x_1^2,0,x_0^2]];
+
+Sigs = spolySig(IF, G_SYZA, 2);
+print(Sigs);
+dispSigs(Sigs);
 
 //SYZF = newsyz.module_syz(IF, MyVar, 0, 2);
 //print(SYZF[1]);
