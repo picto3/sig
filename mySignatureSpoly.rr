@@ -1,6 +1,5 @@
 extern MyVar;
 
-
 def regularCheck(G1, G2, G, SyzG, ORD) {
   SpolyG1G2 = spolyCoef(G1, G2, ORD);
 
@@ -40,9 +39,15 @@ def spolyCoef(F,G, ORD) {
 def spolySig(G, SyzG, ORD) {
   
   Pairs = [];
+  RVs = [];
+  N = length(G);
   for(I = 0; I < length(G); I++) {
     for(J = I+1; J < length(G); J++) {
       Pairs = append(Pairs, [[G[I], G[J]]]);
+      RV = newvect(N);
+      RV[I] = 1;
+      RV[J] = 1;
+      RVs = append(RVs, [RV]);
     }
   }
 
@@ -51,7 +56,20 @@ def spolySig(G, SyzG, ORD) {
   Sigs = [];
   print("Sigaaaaaaaaaaaaa");
   for(I = 0; I < length(Pairs); I++) {
-    Spoly = spolynomial(Pairs[I][0], Pairs[I][1], ORD);
+    Spoly = spolyCoef(Pairs[I][0], Pairs[I][1], ORD);
+    print(Pairs[I]);
+    print(Spoly);
+    RV = RVs[I];
+    KK = 0;
+    for(JJJ = 0; JJJ < N; JJJ++) {
+      if(RV[JJJ] == 1) {
+        RV[JJJ] = Spoly[1][KK];
+        KK++;
+      }
+    }
+    RVV = matrix_matrix_to_list(RV);
+    SpSig1 = mySigSP(RVV, G, SyzG, ORD);
+    print(SpSig1);
 
     if(regularCheck(Pairs[I][0], Pairs[I][1], G, SyzG, ORD) == 1) {
       printf("regular : ");
@@ -79,10 +97,17 @@ def spolySig(G, SyzG, ORD) {
       printf("non-regular : ");
       print(Pairs[I]);
       printf("\n");
+      //SSSS = mySig(Spoly[0], 
+     // SpSig = pot(CompF, ORD);
+      //SpSig = [dp_dtop(SpSig[2][0], MyVar), SpSig[2][1]];
+
     }
   }
 
   RRRR = dispSigRes(Sigs);
+  print(RRRR[0]);
+  print("いらない");
+  print(RRRR[1]);
 
   return Sigs;
 }
@@ -95,17 +120,21 @@ def dispSigs(Sigs) {
   return 0;
 }
 
-def mySig(RP, P, G, SyzG, ORD) {
+def mySig(P, G, SyzG, ORD) {
   RepVec = calcRepVec(P, G, ORD);
 
   if(repVecCheck(RepVec, G, P) == 0) {
-    RepVec = RP;
+    print("RepVec failed");
   }
-
-  printf("最小表現ベクトル : ");
-  print(RepVec);
-
+  
   Sig = calcSig(RepVec, SyzG, ORD);
+
+  return Sig;
+}
+
+def mySigSP(RV, G, SyzG, ORD) {
+  
+  Sig = calcSig(RV, SyzG, ORD);
 
   return Sig;
 }
@@ -193,8 +222,6 @@ def dispSigRes(Sigs) {
 
   return [Iru, Iranai];
 }
-
-
 
 
 end$

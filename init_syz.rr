@@ -5,6 +5,17 @@
 // g in <G> -> Gで割り算すればOK
 // ↑にsploy入れて表現ベクトルを持ってくる
 
+/*
+
+signature が一致したら省いていいという証明を自力で.
+signature のデータをまとめる.
+データを自動的に再現できるようにプログラムをきちんと書く。毎度手作業で入力を変える書き方はよくない。
+
+assert 用のプログラム
+
+*/
+
+
 load("buch3.rr");
 load("div3.rr");
 load("division2.rr");
@@ -13,7 +24,9 @@ load("syzygy.rr");
 load("toric_ex.rr");
 load("mysyz.rr");
 load("my_check_syz.rr");
-load("mySignature.rr");
+//load("mySignature.rr");
+load("mySignatureSpoly.rr");
+load("GM.rr");
 
 load("noro_module_syz.rr");
 //import("noro_module_syz.rr");
@@ -23,13 +36,13 @@ DebugPrint = 0;
 
 extern MyVar;
 MyVar = [x_0, x_1, x_2, x_3, x_4, x_5, x_6, x_7];
-/*
-MyVar = [x, y];
 
-IF = [x^2+y^2-4,x*y - 1];
-GG = buchberger(IF, 2);
-G = mysyz(GG[0],2);
-*/
+//MyVar = [x, y];
+
+//IF = [x^2+y^2-4,x*y - 1];
+//GG = buchberger(IF, 2);
+//G = mysyz(GG[0],2);
+
 /*
 P = (x^2*y+x)*IF[0] + (x+y)*IF[1];
 RepVec = calcRepVec(P, GG, 2);
@@ -39,11 +52,11 @@ print(RepVec);
 print("check");
 repVecCheck(RepVec, GG, P);
 */
-/*
-Sigs = sploySig(GG[0], G, 2);
-print(Sigs);
-dispSigs(Sigs);
-*/
+
+//Sigs = spolySig(GG[0], G, 2);
+//print(Sigs);
+//dispSigs(Sigs);
+
 //GB = buchberger3(IF, 2);
 
 
@@ -88,18 +101,22 @@ G1 = [[1,1,1,1,1], [0,1,0,1,2],[0,0,1,1,0]];
 
 
 print("AAAAAAAAAAAAAAAAAAAA");
-//IF = calc_toric(A);
+IF = calc_toric(E);
 
 //IF = [(x_0)^2,(x_0)*(x_1),(x_1)^2];
 
-IF = [x_0+1,x_1+2,x_2^2+1];
+//IF = [x_0+1,x_1+2,x_2^2+1];
 
 G_SYZA = mysyz(IF, 2);
+//G_SYZA = ggggg();
 //G_SYZA = [[x_1,-x_0,0],[0,x_1,-x_0],[-x_1^2,0,x_0^2]];
 
 Sigs = spolySig(IF, G_SYZA, 2);
 print(Sigs);
-dispSigs(Sigs);
+//dispSigs(Sigs);
+
+GMs = myGM(IF, 2);
+dispGM(GMs);
 
 //SYZF = newsyz.module_syz(IF, MyVar, 0, 2);
 //print(SYZF[1]);
